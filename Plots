@@ -1,0 +1,18 @@
+dat.lm <- aov (outcome_variable ~ Microbiome_Group * Cohort * Gender , data = cwnor)
+Tukey_data <- TukeyHSD((dat.lm))$Microbiome_Group
+
+
+
+Tukey<-as.data.frame(Tukey_data)
+Tukey1<-as.data.frame (rownames_to_column(Tukey, var = "Group"))
+Tukey1[c("group1","group2")]<-str_split_fixed(Tukey1$Group,"-",2)
+Tukey1$`p adj` <-        signif(Tukey1$`p adj`, digits = 3)
+
+
+
+ggviolin(cwnor, x ="Microbiome_Group" , y = "outcome_variable" ,
+          color = "Microbiome_Group", add = "jitter", ylab = "outcome_variable_name",xlab = "Microbiome Group", title = "Anova, p val= outcome_variable_main_ANOVA_pvalue") + scale_color_manual(values= c("#E31A1C","#1F78B4","#FF7F00","#33A02C"))+ 
+  stat_pvalue_manual(Tukey1, label = "p adj", tip.length = 0.02, step.increase = 0.15,y.position = 120)+
+  theme(legend.position="bottom")
+
+ggsave(filename = "outcome_variable_posthoc_Tukey.tiff",height=5,width=5,dpi=700)
