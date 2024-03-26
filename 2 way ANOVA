@@ -1,0 +1,33 @@
+###For sex stratified analysis
+
+cwnorf<-cwnor[cwnor$Gender== "F",]
+cwnorm<-cwnor[cwnor$Gender== "M",]
+
+### For males
+
+
+for(i in 5:ncol(cwnorm)){
+  column <- names(cwnorm[i]) # to print each test name at the top of each ANOVA summary
+  avz <- aov(cwnorm[,i] ~ Microbiome_Group * Cohort , data = cwnorm) # Each ANOVA test iterating through each column of my dataframe
+  result <- summary(avz) # summarize each ANOVA in a table
+  tph<-TukeyHSD(avz, which = "Microbiome_Group") ###tukeys
+  tphcohort<-TukeyHSD(avz, which = "Cohort", conf.level=0.95)
+  print(column)
+  print(result)
+  print(tph)
+  print(tphcohort)
+}
+
+###For females  
+
+for(i in 5:ncol(cwnorf)){
+  column <- names(cwnorf[i]) # to print each test name at the top of each ANOVA summary
+  avz <- aov(cwnorf[,i] ~ Microbiome_Group * Cohort , data = cwnorf) # Each ANOVA test iterating through each column of my dataframe
+  result <- summary(avz) # summarize each ANOVA in a table
+  tph<-TukeyHSD(avz, which = "Microbiome_Group") ###tukeys
+  tphcohort<-TukeyHSD(avz, which = "Cohort", conf.level=0.95)
+  print(column)
+  print(result)
+  print(tph)
+  print(tphcohort)
+}
